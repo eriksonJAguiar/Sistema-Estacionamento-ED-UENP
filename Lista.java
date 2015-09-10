@@ -40,7 +40,8 @@ public class Lista<T extends NomeLista> {
                 aux  = aux.prox;
                 
             }
-            if(val > 0){ /* falta arrumar essa parte */
+            if(val > 0){ /* falta arrumar essa parte, que acrescentará um No na antes da ultima posição inserida caso valor
+                            que irei inserir for menor que o anterior*/
                No novo = new No();
                aux.prox = novo;
                novo.item = t;

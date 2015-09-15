@@ -1,20 +1,18 @@
 package cadastro;
 
-import estruturas.NomeLista;
 
-
-public class Cliente implements NomeLista{
+public class Cliente{
     
     private String nome;
     private long cpf;
-    
+    private Carro carro;
     
     public Cliente(){
         nome = "";
         cpf = 0;
+        carro = new Carro();
        
     }
-
     public String getNome() {
         return nome;
     }
@@ -31,7 +29,12 @@ public class Cliente implements NomeLista{
         this.cpf = cpf;
     }
 
-   
-    
+    public Carro getCarro() {
+        return carro;
+    }
+
+    public void setCarro(Carro carro) {
+        this.carro = carro;
+    }
     
 }

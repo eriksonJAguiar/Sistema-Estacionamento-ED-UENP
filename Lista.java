@@ -1,66 +1,40 @@
 package estruturas;
 
-import java.util.ArrayList;
+import cadastro.Carro;
 
 
-public class Lista<T extends NomeLista> {
-    public static class No<T extends NomeLista>{
-        T item;
+public class Pilha {
+    public static class No{
+        Carro item;
         No prox;
     }
     
-    private No primeiro;
-    private No ultimo;
+    private No topo;
+    private int tamanho;
     
-    public Lista(){
-        primeiro = new No();
-        primeiro.prox = null;
-        ultimo = primeiro;
-    }
-    public void inserir(T t){
-        ultimo.prox = new No();
-        ultimo = this.ultimo.prox;
-        ultimo.item = t;
-        ultimo.prox = null;
+    public Pilha(){
+        topo = null;
+        tamanho = 0;
     }
     
-    public void inserirOrdenado(T t){
-        if(primeiro == ultimo){
-            inserir(t);
-            return;
-        }
-        else{
-            No aux = primeiro;
-            
-             int val = 0;
-            while(aux.prox != null && val <= 0 ){
-                
-               val = aux.prox.item.getNome().compareToIgnoreCase(t.getNome());
-                
-                aux  = aux.prox;
-                
-            }
-            if(val > 0){ /* falta arrumar essa parte, que acrescentará um No na antes da ultima posição inserida caso valor
-                            que irei inserir for menor que o anterior*/
-               No novo = new No();
-               aux.prox = novo;
-               novo.item = t;
-               novo = aux.prox;
-               
-            }
-            else{
-                inserir(t);
-            }
-           
-        }
+    public int getTamanho(){
+        return tamanho;
+    }
+    
+    public void empilhar(Carro t){
+        No aux = new No();
+        aux.item = t;
+        aux.prox = topo;
+        topo = aux;
+        tamanho++;
         
     }
-    public void imprime(){
-        No aux = primeiro.prox;
-        while(aux != null){
-            T t =  (T) aux.item;
-            System.out.println(t.getNome());
-            aux = aux.prox;
-        }
+    public Carro desempilha()throws Exception{
+        if(topo == null) 
+          throw new Exception("ERRO: a pilha está vazia");
+        No aux = topo;
+        topo = topo.prox;
+        tamanho--;
+        return (Carro) aux.item;
     }
 }

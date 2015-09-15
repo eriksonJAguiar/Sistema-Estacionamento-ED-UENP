@@ -3,9 +3,9 @@ package estruturas;
 import cadastro.Carro;
 
 
-public class Pilha<T> {
-    public static class No<T>{
-        T item;
+public class Pilha {
+    public static class No{
+        Carro item;
         No prox;
     }
     
@@ -21,7 +21,7 @@ public class Pilha<T> {
         return tamanho;
     }
     
-    public void empilhar(T t){
+    public void empilhar(Carro t){
         No aux = new No();
         aux.item = t;
         aux.prox = topo;
@@ -29,12 +29,12 @@ public class Pilha<T> {
         tamanho++;
         
     }
-    public T desempilha()throws Exception{
+    public Carro desempilha()throws Exception{
         if(topo == null) 
           throw new Exception("ERRO: a pilha está vazia");
         No aux = topo;
         topo = topo.prox;
         tamanho--;
-        return (T) aux.item;
+        return (Carro) aux.item;
     }
 }

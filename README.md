@@ -1,5 +1,5 @@
 # estrutura-de-dados
-trabalho de estrutura de dados que deve ser entregue dia 28/09
+trabalho de estrutura de dados que deve ser entregue dia 26/09
 
 1 - primeiro passo será criar as estruturas básica; 
 

@@ -1,11 +1,14 @@
 package estruturas;
 
 import cadastro.Cliente;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.Locale;
 
 
 
 
-public class Lista{
+public class ListaCliente{
     public static class No{
         Cliente item;
         No prox;
@@ -15,20 +18,28 @@ public class Lista{
     private No ultimo;
     private int tamanho;
     
-    public Lista(){
+    public  ListaCliente(){
         primeiro = new No();
         primeiro.prox = null;
         ultimo = primeiro;
         tamanho = 0;
     }
-    public void inserirUltimo(Cliente cliente){
+    /**
+     * metodo auxilia o inserirOrdenado
+     * @param cliente - cliente Inserido
+     */
+    private void inserirUltimo(Cliente cliente){
         ultimo.prox = new No();
         ultimo = this.ultimo.prox;
         ultimo.item = cliente;
         ultimo.prox = null;
         tamanho++;
     }
-    public void inserirPrimeiro(Cliente cliente){
+    /**
+     * metodo auxilia o inserirOrdenado
+     * @param cliente - cliente Inserido
+     */
+    private void inserirPrimeiro(Cliente cliente){
         if(tamanho == 0){
              No novo = new No();
             novo.item = cliente;
@@ -47,7 +58,10 @@ public class Lista{
        
         
     }
-    
+    /**
+     * metodo cadastra o cliente em uma lista de forma ordenada por nome
+     * @param cliente - cliente que sera cadastrado
+     */
     public void inserirOrdenado(Cliente cliente){
         if(primeiro == ultimo){
             inserirPrimeiro(cliente);
@@ -77,48 +91,22 @@ public class Lista{
         }
         
     }
-    public Cliente remover(long cpf){
-        No aux = primeiro;
-        int pos = 0;
-        while(aux.prox != null && aux.prox.item.getCpf() != cpf){
-                 pos++;
-                 aux = aux.prox;
-        }
-         if(pos == 0){
-                No dado = primeiro.prox;
-                aux = primeiro.prox;
-                primeiro.prox = primeiro.prox.prox;
-                aux.prox = null;
-                 tamanho--;
-            
-                return dado.item;   
-                }
-                else if(aux.prox == null){
-                Cliente dado = ultimo.item;
-                ultimo = aux;
-                aux.prox = null;
-                ultimo.prox = null;
-                tamanho--;
-                return dado;
-                }
-                else{
-                No aux2 = aux.prox;
-                aux.prox = aux.prox.prox;
-                Cliente dado = aux2.item;
-                aux2.prox = null;
-                tamanho--;
-                return dado;
-                }
-       
-    }
-    public void imprime(){
-        No aux = primeiro.prox;
-        while(aux != null){
-            System.out.println(aux.item.getNome());
+    /**
+     * metodo prucura um cliente pelo cpf 
+     * @param cpf - cpf procurado
+     * @return achou 
+     */
+    public boolean possuiCliente(long cpf){
+    	No aux = primeiro;
+        boolean achou = false;
+    	while(aux.prox != null){
+            if(aux.prox.item.getCpf() == cpf){
+            	achou = true;
+            	return achou;
+            }
             aux = aux.prox;
-        }
+    	}
+    	return achou;
     }
-    public int getTamanho(){
-        return tamanho;
-    }
+    
 }

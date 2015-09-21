@@ -1,7 +1,10 @@
 package cadastro;
 
+import java.time.LocalDateTime;
+
 import estruturas.Filas;
 import estruturas.ListaCliente;
+import estruturas.PilhaCarro;
 
 
 
@@ -11,12 +14,16 @@ public class Estacionamento {
 	private double taxaPorHora;
 	private Filas filas;
 	private ListaCliente listaClientes;
+	private PilhaCarro pilhaCarros;
 	
 	public Estacionamento(int numeroFilas,int numeroCarrosPorFila, double taxaPorHora){
 		this.numeroFilas = numeroFilas;
 		this.numeroCarrosPorFila = numeroCarrosPorFila;
 		this.taxaPorHora = taxaPorHora;
+		pilhaCarros = new PilhaCarro();
+		filas = new Filas();
 	}
+	
 	/**
 	 * 
 	 * @return int - O maximo de carros que podem ser inseridos no estacionamento
@@ -24,26 +31,38 @@ public class Estacionamento {
 	public int lotacaoMaxima(){
 		return (((numeroFilas - 1) *numeroCarrosPorFila)+1);
 	}
-	/**
+	/**	
 	 * 
 	 * @return boolean - se tem vagas livres no estacionamento
 	 */
 	public boolean temVaga(){
-		return false;
+		int vagasOcupadas = pilhaCarros.getTamanho() * filas.getTamanho();
+		if(vagasOcupadas < lotacaoMaxima()){
+			return true;
+		}
+			return false;
 	}
 	/**
-	 * 
+	 * @param Carro - o carro retirado sera passado por parametro para 
 	 * @return double- valor a ser cobrado por hora no estacionamento
 	 */
-	public double valorCobrado(){
+	public double valorCobrado(LocalDateTime horaEntrada){
+		// ainda não foi feito pois  variavel de data e hora tem que ser alterada seu tipo
 		return 0;
 	}
 	/**
-	 *
+	 *@return String - indicando a posicao do estacionamento que foi inserida
 	 * @param carro - o objeto carro que sera inserido no estacionamento
 	 */
-	public void inserir(Carro carro){
-		
+	public String inserir(Carro carro){
+		if(pilhaCarros.getTamanho() < numeroCarrosPorFila){
+			pilhaCarros.empilhar(carro);
+		}
+		else{
+			filas.inserir(pilhaCarros);
+			pilhaCarros = new PilhaCarro();
+		}
+		return verificaMelhorPosicao();
 	}
 	/**
 	 * 
@@ -65,7 +84,7 @@ public class Estacionamento {
 	 * @return String - com melhor posicao
 	 */
 	public String verificaMelhorPosicao(){
-		return null;
+		return ((pilhaCarros.gerPos()+1) + (filas.getLetraFila()+1));
 	}
 	/**
 	 * metodo grava o os clientes em um arquivo
@@ -86,4 +105,5 @@ public class Estacionamento {
 	public void gerarRelatorioLucros(){
 		
 	}
+	
 }

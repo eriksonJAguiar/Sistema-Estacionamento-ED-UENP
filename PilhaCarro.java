@@ -12,16 +12,24 @@ public class PilhaCarro{
     public static class No{
         Carro item;
         No prox;
+        
     }
     
     private No topo;
     private int tamanho;
+    private int pos;	
     
     public PilhaCarro(){
         topo = null;
         tamanho = 0;
     }
-    
+    /**
+     * 
+     * @return int - indicando a posicao que foi inserido na pilha
+     */
+    public int gerPos(){
+    	return pos;
+    }
     public int getTamanho(){
         return tamanho;
     }
@@ -35,7 +43,7 @@ public class PilhaCarro{
         aux.prox = topo;
         topo = aux;
         tamanho++;
-        
+        pos = tamanho;
     }
     /**
      * 
@@ -50,6 +58,20 @@ public class PilhaCarro{
         tamanho--;
         return (Carro) aux.item;
     }
+    /*public void imprime(){
+        No aux = topo.prox;
+        while(aux != null){
+           DateTimeFormatter formatador = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).withLocale(new Locale("pt", "br"));
+            System.out.println("-------------------------------------------------------"+"\n"
+                             + "NOME: "+aux.item.getNome()+"\n"
+                             + "CPF: "+aux.item.ggetCpf()+"\n"
+                             + "MODELO CARRO: "+aux.item.getModelo()+"\n"
+                             + "ANO CARRO: "+ aux.item.getAno()+"\n"
+                             + "PLACA DO CARRO: "+aux.item.getPlaca()+"\n"
+                             + "HORARIO DE ENTRADA: "+ aux.item.getData().format(formatador)+"\n"
+                             + "----------------------------------------------------------"+"\n");
+            aux = aux.prox;
+        }*/
     
    
 }

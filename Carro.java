@@ -12,15 +12,15 @@ public class Carro {
     private String placa;
     private int ano;
     private Cliente cliente;
-    private LocalDateTime data;
-    
+    private LocalDateTime horaEntrada;
+    private String observacoes;
     
     public Carro() {
         this.modelo = "";
         this.placa = "";
         ano = 0;
         cliente = new Cliente();
-       data = LocalDateTime.now(ZoneId.of("Brazil/East"));
+        horaEntrada = LocalDateTime.now(ZoneId.of("Brazil/East"));
     }
     /**
      * 
@@ -68,8 +68,36 @@ public class Carro {
      * 
      * @return LocalDateTime - hora e data do sistema
      */
-    public LocalDateTime getData(){
-        return data;
+    public LocalDateTime gethoraEntrada(){
+        return horaEntrada;
     }
+    /**
+     * 
+     * @return Cliente - que e dono do carro
+     */
+	public Cliente getCliente() {
+		return cliente;
+	}
+	/**
+	 * 
+	 * @param Cliente - cliente que e dono do carro
+	 */
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
+	}
+	/**
+	 * 
+	 * @return String - as observacoes do cliente
+	 */
+	public String getObservacoes() {
+		return observacoes;
+	}
+	/**
+	 * 
+	 * @param observacoes - cliente escreve suas observacoes
+	 */
+	public void setObservacoes(String observacoes) {
+		this.observacoes = observacoes;
+	}
     
 }

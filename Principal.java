@@ -70,7 +70,7 @@ public class Principal {
                 	
                 	carro = new Carro();
                 	cliente = new Cliente();
-                    
+                    // falta colocar o try catch para capturar a exceção de caso o usuário informa um campo errado
                     System.out.println("Informe o Nome do Cliente: ");
                     String nome = teclado.next();
                     teclado.nextLine();
@@ -105,6 +105,8 @@ public class Principal {
                 
                 case 2:
 				carro = new Carro();
+				
+				// o while volta caso o usuario inserir uma opção errada ou seja insira o try catch nessa e faça o metodo de inserir 
 				int opcao = 0;
 				while (opcao != -1) {
 					System.out.println("Digite 1 para remover por placa"+"\n" 
@@ -128,7 +130,8 @@ public class Principal {
 						teclado.next();
 					}
 				}
-                    estruturas.ListaSaida.No no = estacionamento.remover(carro);
+                    
+					estruturas.ListaSaida.No no = estacionamento.remover(carro);
                     
                     
                     String consulta = "Placa não encontrada"; 

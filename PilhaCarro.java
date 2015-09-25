@@ -1,5 +1,7 @@
 package estruturas;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Locale;
@@ -10,68 +12,101 @@ import estruturas.ListaCliente.No;
 
 public class PilhaCarro{
     public static class No{
-        Carro item;
-        No prox;
+       public Carro item;
+       public No prox;
+       public int pos; //posicao da pilha que o no representa
         
     }
     
     private No topo;
     private int tamanho;
-    private int pos;	
+    	
     
     public PilhaCarro(){
         topo = null;
         tamanho = 0;
     }
     /**
-     * 
      * @return int - indicando a posicao que foi inserido na pilha
      */
-    public int gerPos(){
-    	return pos;
-    }
     public int getTamanho(){
         return tamanho;
     }
+    /** 
+     * @return No - que e relacionado ao Topo
+     */
+    public No getTopo()
+    {
+    	return topo;
+    }
     /**
-     * 
      * @param carro - carro que sera empilhado
      */
     public void empilhar(Carro carro){
         No aux = new No();
         aux.item = carro;
         aux.prox = topo;
+        aux.pos = ++tamanho;
         topo = aux;
-        tamanho++;
-        pos = tamanho;
     }
     /**
-     * 
      * @return Carro - desempilhado
-     * @throws Exception - se não tiver nenhum carro no estacionamento gera exceção
      */
-    public Carro desempilha()throws Exception{
+    public Carro desempilha(){
         if(topo == null) 
-          throw new Exception("Nenhum Carro foi inserido");
+          return null;
+        
         No aux = topo;
-        topo = topo.prox;
+        if(topo.prox != null)
+        	topo = topo.prox;
+        else
+        	topo = null;
         tamanho--;
-        return (Carro) aux.item;
+        return aux.item;
     }
-    /*public void imprime(){
-        No aux = topo.prox;
-        while(aux != null){
-           DateTimeFormatter formatador = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).withLocale(new Locale("pt", "br"));
-            System.out.println("-------------------------------------------------------"+"\n"
-                             + "NOME: "+aux.item.getNome()+"\n"
-                             + "CPF: "+aux.item.ggetCpf()+"\n"
-                             + "MODELO CARRO: "+aux.item.getModelo()+"\n"
-                             + "ANO CARRO: "+ aux.item.getAno()+"\n"
-                             + "PLACA DO CARRO: "+aux.item.getPlaca()+"\n"
-                             + "HORARIO DE ENTRADA: "+ aux.item.getData().format(formatador)+"\n"
-                             + "----------------------------------------------------------"+"\n");
-            aux = aux.prox;
-        }*/
+    /**
+     * busca o placa e retorna um no da pilha
+     * @param placa
+     * @return No da ListaSaida
+     */
+   
+    public estruturas.ListaSaida.No buscarPlaca(String placa){
+        No aux = topo;
+        while(aux != null)
+        {
+            if(aux.item.getPlaca().equalsIgnoreCase(placa))
+            {
+            	estruturas.ListaSaida.No no = new estruturas.ListaSaida.No();
+            	no.item = aux.item;
+            	no.posicao = String.valueOf(aux.pos);
+            	no.horaSaida = LocalDateTime.now(ZoneId.of("Brazil/East"));
+            	return no;
+            }
+        	aux = aux.prox;
+        }
+        return null;
+    }
+    /**
+     * busca o placa e retorna um no da pilha
+     * @param nome
+     * @return No da ListaSaida
+     */
+    public estruturas.ListaSaida.No buscarNome(String nome){
+        No aux = topo;
+        while(aux != null)
+        {
+            if(aux.item.getCliente().getNome().equalsIgnoreCase(nome))
+            {
+            	estruturas.ListaSaida.No no = new estruturas.ListaSaida.No();
+            	no.item = aux.item;
+            	no.posicao = String.valueOf(aux.pos);
+            	no.horaSaida = LocalDateTime.now(ZoneId.of("Brazil/East"));
+            	return no;
+            }
+        	aux = aux.prox;
+        }
+        return null;
+    }
     
    
 }

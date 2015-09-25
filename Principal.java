@@ -6,8 +6,12 @@ import cadastro.Cliente;
 import cadastro.Estacionamento;
 import estruturas.Filas;
 import estruturas.ListaCliente;
+import estruturas.ListaSaida.No;
 import estruturas.PilhaCarro;
 
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.Locale;
 import java.util.Scanner;
 /**
  *
@@ -20,46 +24,61 @@ public class Principal {
         ListaCliente cadastrosCliente = new ListaCliente();
         Carro carro = new Carro();
         Cliente cliente = new Cliente();
+        String log = new String();
         
-        System.out.println("Informe o Tamamanho do Estacionamento: ");
+        
+        System.out.println("Informe o Tamanho do Estacionamento ");
         System.out.print("Digite o numero de filas: ");
         int numeroFilas = teclado.nextInt();
         System.out.print("Digite o Numero de Carros por Fila: ");
         int numeroCarrosPorFila = teclado.nextInt();
-        System.out.print("Informe a Taxa Cobrada por hora :");
+        System.out.print("Informe a Taxa Cobrada por hora: ");
         double taxaPorHora = teclado.nextDouble();
         Estacionamento estacionamento = new Estacionamento(numeroFilas, numeroCarrosPorFila, taxaPorHora);
+        
+
         System.out.println("--------------------------------------------------------------------------");
         
-        while(sair != true){
+        while(!sair){
         	
-        	if(estacionamento.temVaga() == false){
-        		System.out.println("Estacionamento cheio ! Não é Possivel Inserir mais Carros");
-        	}
         	
-            System.out.print("Digite 1 para Cadastrar Cliente\n"
-                             + "Digite 2 Inserir um Carro\n"
-                             + "Digite 3 para Remover Carro\n"
-                             + "Digite 4 para Alterar Valor Cobrado por Hora\n" 
-                             + "Digite 5 para Ver Situacao da Garagem\n"
-                             + "Digite 6 gerar relatório de clientes\n"
-                             + "Digite 7 relatório de carros da garagem\n"
-                             + "Digite 8 relatório de lucros\n"
-                             + "Digite 9 para sair\n"
+        	
+            System.out.print("Digite 1 Inserir um Carro\n"
+                             + "Digite 2 para Remover Carro\n"
+                             + "Digite 3 para Alterar Valor Cobrado por Hora\n" 
+                             + "Digite 4 para Ver Situacao da Garagem\n"
+                             + "Digite 5 para sair\n"
                              + "Digite: ");
-            int opc = teclado.nextInt();
+            int opc = 0;
+            
+            try
+            {
+            	opc = teclado.nextInt();
+            }
+            catch(Exception ex)
+            {
+            	opc = 0;
+            	teclado.next();
+            }
+            
             switch(opc){
                 case 1:
-                	// obs falta indentificar se o usuário já existe 
+                	if(!estacionamento.temVaga()){
+    	        		System.out.println("Estacionamento cheio ! Não é Possivel Inserir mais Carros");
+    	        		break;
+    	        	}
+                	
                 	carro = new Carro();
                 	cliente = new Cliente();
-                    try{
+                    
                     System.out.println("Informe o Nome do Cliente: ");
                     String nome = teclado.next();
                     teclado.nextLine();
                     cliente.setNome(nome);
                     System.out.println("Informe o cpf: ");
                     cliente.setCpf(Long.parseLong(teclado.nextLine()));
+                    estacionamento.verificarCliente(cliente.getNome(), cliente.getCpf());
+                    
                     System.out.println("Informe o modelo do carro: ");
                     carro.setModelo(teclado.nextLine());
                     System.out.println("Informe o ano do carro: ");
@@ -72,59 +91,87 @@ public class Principal {
                     carro.setObservacoes(obs);
                     carro.setCliente(cliente);
                     
-                    }catch(NumberFormatException e){
-                    	System.out.println("Erro no digito informado");
-                    }
-                    catch(Exception ex){
-                    	System.out.println("Erro :" + ex);
-                    }
-                    break;
+                	String vaga = estacionamento.inserir(carro, "");
+                	System.out.println("Carro Estacionado na vaga " + vaga);
+                	
+                	String cadastroCliente = "-------------------------------------------------------"+"\n"
+    	                    				+ "NOME: "+ cliente.getNome() +"\n"
+    	                    				+ "CPF: "+cliente.getCpf()+"\n"
+                							+"-------------------------------------------------------"+"\n";
+                	//gera relatorio de clientes que foram inseridos
+                	estacionamento.gerarRelatorioCliente(cadastroCliente);
                     
-                case 2:
-                    try{
-                	estacionamento.inserir(carro);
-                	System.out.println("Carro Estacionado com sucesso");
-                	//tera que retornar a posição que foi inserido, ainda falta esse detalhe
-                    }catch(Exception ex){
-                    	System.out.println("Erro : "+ex);
-                    }
-                    break;
+                	break;
                 
-                case 3:
-                	// na retirada do carro poderei consultar o por placa, por nome e irei calcular o valor a ser pago
-                    //falta construir esse método que irá mostrar os passos para o manobrista ;
+                case 2:
+				carro = new Carro();
+				int opcao = 0;
+				while (opcao != -1) {
+					System.out.println("Digite 1 para remover por placa"+"\n" 
+									  +"Digite 2 para remover por nome"+"\n");
+					opcao = teclado.nextInt();
+					switch (opcao) {
+					case 1:
+						System.out.println("Infome a placa do carro: ");
+						carro.setPlaca(teclado.next());
+						teclado.nextLine();
+						opcao = -1;
+						break;
+					case 2:
+						System.out.println("Infome o nome do Cliente: ");
+						carro.getCliente().setNome(teclado.next());
+						teclado.nextLine();
+						opcao = -1;
+						break;
+					default:
+						System.out.println("Digito invalido: ");
+						teclado.next();
+					}
+				}
+                    estruturas.ListaSaida.No no = estacionamento.remover(carro);
+                    
+                    
+                    String consulta = "Placa não encontrada"; 
+                    if(no != null)
+                    {
+                    	// insere o lucro do dia no log, caso sair do programa gera os lucros
+                    	log = estacionamento.lucroDia(no.valorPago, no.horaSaida);
+                    	
+                    	
+                    	DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy"+" "+"HH:mm:ss");
+                    	Carro car = no.item;
+                    	consulta = "-------------------------------------------------------"+"\n"
+        	                    + "NOME: "+car.getCliente().getNome()+"\n"
+        	                    + "CPF: "+car.getCliente().getCpf()+"\n"
+        	                    + "MODELO CARRO: "+car.getModelo()+"\n"
+        	                    + "ANO CARRO: "+ car.getAno()+"\n"
+        	                    + "PLACA DO CARRO: "+car.getPlaca()+"\n"
+        	                    + "HORARIO DE ENTRADA: "+ car.gethoraEntrada().format(formatador) +"\n"
+        	                    + "HORARIO DE SAIDA: "+ no.horaSaida.format(formatador) +"\n"
+        	                    + "VALOR PAGO: "+ no.valorPago +"\n"
+        	                    + "POSIÇÂO: "+ no.posicao +"\n"
+     	                    + "----------------------------------------------------------"+"\n";
+                    	
+                    	// grava no arquivo os carros que sairam recebendo consulta como parametro
+                    	estacionamento.gerarRelatorioCarros(consulta);
+                        
+                    	System.out.println(no.passos);
+                    }
+                    System.out.println(consulta);
                     break;
-                case 4:
-                	try{
+                case 3:
+                	System.out.print("Informe a nova taxa a ser cobrada: ");
                 	double novaTaxa = teclado.nextDouble();
                     estacionamento.alterarTaxa(novaTaxa);
-                	}catch(NumberFormatException e){
-                		System.out.println("O Erro no digito inserido");
-                	}
-                	catch(Exception ex){
-                		System.out.println("Erro: "+ex);
-                	}
+                	break;
+                case 4: 
+                	System.out.println("Situacao Atual");
+                	System.out.println(estacionamento.situacaoAtual());
                 	break;
                 case 5:
-                	// ver situação da garagem ainda precisa ser implementado
-                	break;
-                case 6:	
-                	// irá gerar os relatorio de carros e grava em um arquivo
-                	// porem ainda não está implementado
-                	estacionamento.gerarRelatorioCarros();
-                	break;
-                case 7:
-                	// irá gerar os relatorio de clientes e grava em um arquivo
-                	// porem ainda não está implementado
-                	estacionamento.gerarRelatorioCliente();
-                	break;
-                case 8:
-                	// irá gerar os relatorio de luros do dia e grava em um arquivo
-                	// porem ainda não está implementado
-                	estacionamento.gerarRelatorioLucros();
-                	break;
-                case 9:
                 	sair  = true;
+                	estacionamento.gerarRelatorioLucros(log);
+                	System.out.println("Programa Finalizado !");
                 	break;
                 default :
                 	System.out.println("Opcao Nao Encontrada, Por Favor Digite Novamente");

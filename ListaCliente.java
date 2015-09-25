@@ -70,12 +70,12 @@ public class ListaCliente{
         else{
             No aux = primeiro;
             No aux2 = primeiro;
-             int val = 0;
+            int val = 0;
             while(aux.prox != null && val <= 0){
                 
                val = aux.prox.item.getNome().compareToIgnoreCase(cliente.getNome());
                aux2 = aux;
-                aux  = aux.prox;
+               aux  = aux.prox;
                 
             }
              if(val > 0){
@@ -108,5 +108,14 @@ public class ListaCliente{
     	}
     	return achou;
     }
-    
+    public void imprime(){
+        No aux = primeiro.prox;
+        while(aux != null){
+            System.out.println("-------------------------------------------------------"+"\n"
+                             + "NOME: "+aux.item.getNome()+"\n"
+                             + "CPF: "+aux.item.getCpf()+"\n"
+                             + "----------------------------------------------------------"+"\n");
+            aux = aux.prox;
+        }
+    }
 }
